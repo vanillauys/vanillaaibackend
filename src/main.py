@@ -7,6 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+from schemas import Schemas
+from db.database import Database
+from routers import users
 
 
 # ---------------------------------------------------------------------------- #
@@ -14,6 +17,8 @@ from dotenv import load_dotenv
 # ---------------------------------------------------------------------------- #
 
 load_dotenv()
+schemas = Schemas()
+db = Database()
 
 TAGS_METADATA = [
     {
@@ -23,6 +28,10 @@ TAGS_METADATA = [
             "description": "FastAPI Documentation",
             "url": "https://fastapi.tiangolo.com/",
         }
+    },
+    {
+        "name": "Users",
+        "description": "User handling and authentication"
     }
 ]
 
@@ -56,6 +65,7 @@ app.add_middleware(
 )
 
 # Add routers from different files here, to keep things tidy.
+app.include_router(users.router)
 
 
 # ---------------------------------------------------------------------------- #
@@ -64,17 +74,17 @@ app.add_middleware(
 
 
 @app.get('/', tags=['Testing'],
-         response_model=Message,
-         responses={
-    500: {"model": Message}
-}
+    response_model=schemas.detail(),
+    responses={
+        500: {"model": schemas.detail()}
+    }
 )
 def info():
     """
     ### Basic route to test functionality.
     """
     response = {
-        'message': "https://vanillaai.deta.dev/docs"
+        'detail': "https://vanillaai.deta.dev/docs"
     }
     return JSONResponse(status_code=200, content=response)
 
