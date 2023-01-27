@@ -29,12 +29,12 @@ schemas = Schemas()
 
 
 @router.post('/users/register', tags=['Users'],
-    response_model=schemas.detail(),
+    response_model=schemas.Detail,
     responses = {
-        409: {"model": schemas.detail()},
-        500: {"model": schemas.detail()}
+        409: {"model": schemas.Detail},
+        500: {"model": schemas.Detail}
     }
 )
-def register(user: schemas.create_user()):
+def register(user: schemas.CreateUser):
     code, response = db.create_user(user)
     return JSONResponse(status_code=code, content={'detail': response})

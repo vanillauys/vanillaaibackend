@@ -39,7 +39,7 @@ class Database():
     # ------------------------------------------------------------------------ #
 
 
-    def create_user(self, user: schema.create_user()) -> Tuple[int, str]:
+    def create_user(self, user: schema.CreateUser) -> Tuple[int, str]:
         # check if username exists
         code, _, _ = self.get_user_by_username(user.username) 
         if code == 200:
@@ -83,7 +83,7 @@ class Database():
             return 200, f"user '{email}' found in db.", user[0]
 
         except Exception:
-            return 500, "a db error occured.", None
+            return 500, f"an error occured while fetching '{email}'.", None
 
 
     def get_user_by_username(self, username: str) -> Tuple[int, str, Dict]:
@@ -97,4 +97,4 @@ class Database():
             return 200, f"user '{username}' found in db.", user[0]
 
         except Exception:
-            return 500, "a db error occured.", None
+            return 500, f"an error occured while fetching '{username}'", None

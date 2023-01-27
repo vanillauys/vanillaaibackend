@@ -74,9 +74,9 @@ app.include_router(users.router)
 
 
 @app.get('/', tags=['Testing'],
-    response_model=schemas.detail(),
+    response_model=schemas.Detail,
     responses={
-        500: {"model": schemas.detail()}
+        500: {"model": schemas.Detail}
     }
 )
 def info():
