@@ -24,9 +24,6 @@ class Schemas():
     
     Detail: DetailClass = DetailClass
 
-    def detail(self):
-        return self.Detail
-
 
     # ------------------------------------------------------------------------ #
     # --- User Schemas ------------------------------------------------------- #
@@ -63,14 +60,18 @@ class Schemas():
     LoginUser: LoginUserClass = LoginUserClass
     LoginUserSuccess: LoginUserSuccessClass = LoginUserSuccessClass
 
-    def user(self) -> User:
-        return self.User
 
-    def create_user(self) -> CreateUser:
-        return self.CreateUser
-    
-    def login_user(self) -> LoginUser:
-        return self.LoginUser
-    
-    def login_user_success(self) -> LoginUserSuccess:
-        return self.LoginUserSuccess
+    # ------------------------------------------------------------------------ #
+    # --- Youtube Schemas ---------------------------------------------------- #
+    # ------------------------------------------------------------------------ #
+
+
+    class DownloadAudioClass(BaseModel):
+        url: str
+
+    class DownloadSuccessClass(BaseModel):
+        detail: str
+        title: str
+
+    DownloadAudio: DownloadAudioClass = DownloadAudioClass
+    DownloadSuccess: DownloadSuccessClass = DownloadSuccessClass
