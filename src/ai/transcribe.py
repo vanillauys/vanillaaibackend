@@ -4,6 +4,7 @@
 
 
 import whisper
+from typing import Tuple
 
 
 # ---------------------------------------------------------------------------- #
@@ -27,9 +28,9 @@ class WhisperAI():
     # ------------------------------------------------------------------------ #
 
 
-    def transcribe_audio(self, audio: str):
+    def transcribe_audio(self, audio: str) -> Tuple[int, str, str]:
         try:
             transcription = self.whisper_model.transcribe(audio, fp16=False)
-            return 200, transcription
-        except Exception:
-            return 500, None
+            return 200, transcription['text'], None
+        except Exception as e:
+            return 500, None, str(e)

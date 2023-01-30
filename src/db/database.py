@@ -17,6 +17,7 @@ from typing import Dict, Tuple
 
 
 schema = Schemas()
+load_dotenv()
 
 class Database():
 
@@ -26,7 +27,6 @@ class Database():
     # ------------------------------------------------------------------------ #
 
 
-    load_dotenv()
     auth = Auth()
     PROJECT_KEY = os.environ.get('DETA_PROJECT_KEY')
     deta = Deta(PROJECT_KEY)
