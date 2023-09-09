@@ -2,6 +2,9 @@ from youtube.youtube import Youtube
 from ai.transcribe import WhisperAI
 from ai.gpt import DavinciAI
 from ai.dalle import DalleAI
+from schemas import YoutubeDownloadReturnClass as YoutubeReturn
+from schemas import WhisperTranscribeReturnClass as WhisperReturn
+from applogger import log
 
 
 yt = Youtube()
@@ -11,17 +14,27 @@ dl = DalleAI()
 
 
 def main():
-    code, response, title = yt.download_audio('https://www.youtube.com/watch?v=8nHBGFKLHZQ')
+    url: str = "https://www.youtube.com/watch?v=8nHBGFKLHZQ"
+    log.debug(f"Downloading `{url}` with YoutubeDownloader")
+    video: YoutubeReturn = yt.download_audio(url)
 
-    print(code, response)
+    if video["error"]:
+        log.error(f"Error downloading `{url}`")
+        log.error(f"{video['message']}")
+        return
 
-    code, text, err = ws.transcribe_audio(f'videos/{title}')
+    log.debug(f"Transcribing {video['title']} with Whisper")
+    transcription: WhisperReturn = ws.transcribe_audio(f"videos/{video['title']}")
 
-    print(code, err)
+    if transcription["error"]:
+        log.error(f"Error transcribing `{video['title']}`")
+        log.error(f"{transcription['text']}")
+        return
 
-    code, response, data = dv.summarize(text)
+    code, response, data = dv.summarize(transcription["text"])
 
     print(code, data)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

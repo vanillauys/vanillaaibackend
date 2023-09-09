@@ -4,7 +4,7 @@
 
 
 from pytube import YouTube
-from typing import Tuple
+from schemas import YoutubeDownloadReturnClass as YoutubeReturn
 
 
 # ---------------------------------------------------------------------------- #
@@ -12,31 +12,38 @@ from typing import Tuple
 # ---------------------------------------------------------------------------- #
 
 
-class Youtube():
-
-
+class Youtube:
     # ------------------------------------------------------------------------ #
     # --- Youtube Configuration ---------------------------------------------- #
     # ------------------------------------------------------------------------ #
 
-
-    directory = 'videos/'
-
+    directory = "videos/"
 
     # ------------------------------------------------------------------------ #
     # --- Youtube Downloader ------------------------------------------------- #
     # ------------------------------------------------------------------------ #
 
-
-    def download_audio(self, url: str) -> Tuple[int, str, str]:
+    def download_audio(self, url: str) -> YoutubeReturn:
         try:
-            title = YouTube(url).title + '.mp4'
+            title = YouTube(url).title + ".mp4"
             video = YouTube(url).streams.filter(only_audio=True).first()
             size = video.filesize_mb
             if size > 2.5:
-                return 507, f"the video '{title}' is too large to process.", None 
+                return_model: YoutubeReturn = {
+                    "message": f"the video '{title}' is too large to process.",
+                    "title": "",
+                    "error": True,
+                }
             video.download(self.directory, filename=title)
-            return 200, f"successfully downloaded '{url}'", title
-        except Exception:
-            return 500, f"could not download '{url}'", None
-
+            return_model: YoutubeReturn = {
+                "message": f"successfully downloaded '{url}'",
+                "title": title,
+                "error": False,
+            }
+        except Exception as e:
+            return_model: YoutubeReturn = {
+                "message": str(e),
+                "title": "",
+                "error": True,
+            }
+        return return_model
